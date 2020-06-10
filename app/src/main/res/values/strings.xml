@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">兵击计分器</string>
+    <string name="app_name_offline">兵击计分器(离线版)</string>
+
+    <string name="action_settings">比赛设置</string>
+    <string name="about">关于</string>
+    <string name="vs">vs</string>
+    <string name="default_score">00</string>
+    <string name="default_time">00:00</string>
+    <string name="comment">备注</string>
+    <string name="label_match_period">比赛时长: </string>
+    <string name="save">保存</string>
+    <string name="logo">云栖logo</string>
+    <string name="label_contract">联系方式</string>
+    <string name="label_qq_org">QQ群号：275818602</string>
+    <string name="label_qq_fox">QQ号码：864706521</string>
+    <string name="label_wechat_fox">微信：bnzeefox</string>
+    <string name="label_fox">联系人：狐彻</string>
+</resources>

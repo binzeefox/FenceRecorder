@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="menu_group_list_popup" type="id"/>
+    <item name="menu_delete" type="id"/>
+    <item name="menu_upload" type="id"/>
+
+    <item name="menu_group_match_config_activity" type="id"/>
+    <item name="menu_save" type="id"/>
+</resources>
