@@ -1,9 +1,12 @@
 package com.cloud_hermits.fencerecorder.cat;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.Observer;
@@ -36,6 +40,7 @@ import io.reactivex.disposables.Disposable;
  * · 为防止错误操作，只有计时器暂停时才能修改分数
  * · 计时暂停的状态下，为防止错误操作，需要2秒内两次点击返回键才能终止比赛
  * · 比赛终止后，自动保存数据到数据库，同时若绑定了传感器设备，则一同保存传感器数据。然后尝试上传至服务器。再次点击返回键则返回列表
+ *
  * @author binze
  * 2020/6/8 17:03
  */
@@ -67,13 +72,65 @@ public class MainActivity extends BaseActivity {
     protected void create(Bundle savedInstanceState) {
         super.create(savedInstanceState);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("");
         timerField.setText(getTimeByLong(period));
+    }
+
+    /**
+     * 菜单点击事件
+     *
+     * @author binze 2019/11/21 12:04
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.about) { //说明
+            if (recorder == null || !recorder.isRunning()) {
+                //显示说明弹窗
+                new AlertDialog.Builder(this)
+                        .setTitle("使用说明")
+                        .setCancelable(true)
+                        .setMessage(getIntro())
+                        .show();
+                return true;
+            } else if (recorder.isRunning()){
+                NoticeUtil.get().showToast("计时状态下屏蔽按键");
+                return false;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 获取使用说明
+     *
+     * @author binze 2020/6/19 11:27
+     */
+    private String getIntro() {
+        return "1. 输入双方选手姓名\n" +
+                "2. （若需要）修改比赛时长\n" +
+                "3. 点击开始按钮进行计时\n" +
+                "4. 若出现得分，暂停计时并修改分数\n" +
+                "5. 时间到，裁判修改最终分数并按返回键退出\n" +
+                "6. 若提前结束，需先暂停计时，并按两次返回键结束比赛，按第三次返回键退出\n" +
+                "P.S. 为防止误触，计时状态下将屏蔽除暂停外所有操作。如需修改分数，请先暂停计时";
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.action_settings).setVisible(false);
+        return true;
     }
 
     @Override
     public void onBackPressed() {
-        if (recorder != null){
-            if (recorder.isRunning()){
+        if (recorder != null) {
+            if (recorder.isRunning()) {
                 //运行中
                 NoticeUtil.get().showToast("计时状态下屏蔽返回键");
             } else if (!finish) {
@@ -93,9 +150,10 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 比赛结束
+     *
      * @author binze 2020/6/8 17:14
      */
-    private void endMatch(){
+    private void endMatch() {
         NoticeUtil.get().showToast("比赛结束，再次点击返回键返回列表");
         finish = true;
         getViewHelper().setViewsEnable(false, redScoreField, blueScoreField);
@@ -143,10 +201,11 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 点击动作键
+     *
      * @author binze 2020/6/8 17:15
      */
-    private void actionClicked(){
-        if (recorder == null){
+    private void actionClicked() {
+        if (recorder == null) {
             getViewHelper().setViewsEnable(false, redSideField, blueSideField);
             redSideField.clearFocus();
             blueScoreField.clearFocus();
