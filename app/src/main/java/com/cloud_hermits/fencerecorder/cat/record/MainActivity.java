@@ -122,11 +122,6 @@ public class MainActivity extends BaseActivity {
      * @author binze 2019/12/17 11:43
      */
     private void changeScore(int target, int score) {
-        if (recorder == null) {
-            NoticeUtil.get().showToast("比赛尚未开始");
-            return;
-        }
-        String i = String.format("s%s", 112.3333);
         switch (target) {
             case 0:
                 recorder.scoreRed(score);
@@ -141,7 +136,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void superOnBackPressed() {
-        super.onBackPressed();
+        runOnUiThread(super::onBackPressed);
     }
 
     private void changeState(RecordState state) {
@@ -177,7 +172,7 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onChangeScore(int target, int score) {
-            changeScore(target, score);
+            NoticeUtil.get().showToast("比赛尚未开始");
         }
 
         @Override
@@ -237,8 +232,8 @@ public class MainActivity extends BaseActivity {
                         changeState(END_STATE);
                     }
                 });
-                fabIcon.setImageResource(R.drawable.ic_pause);
             }
+            fabIcon.setImageResource(R.drawable.ic_pause);
         }
 
         @Override
@@ -266,8 +261,8 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onStart() {
-            configUi();
             recorder.pause();
+            configUi();
         }
 
         @Override
