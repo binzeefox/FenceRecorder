@@ -14,6 +14,7 @@ import com.cloud_hermits.fencerecorder.base.BaseActivity;
 import com.cloud_hermits.fencerecorder.base.BaseApplication;
 import com.cloud_hermits.fencerecorder.database.tables.Match;
 import com.cloud_hermits.fencerecorder.recorder_core.ConfigUtil;
+import com.tencent.bugly.beta.Beta;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -52,6 +53,10 @@ public class ConfigActivity extends BaseActivity {
         setTitle("比赛设置");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        findViewById(R.id.btn_update).setOnClickListener(v -> {
+            Beta.checkUpgrade(true, false);    //检查更新
+        });
+        
         initData();
     }
 

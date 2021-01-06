@@ -69,6 +69,14 @@
         </TableRow>
 
         <Button
+            android:id="@+id/btn_update"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@android:color/primary_text_dark"
+            android:layout_width="match_parent"
+            android:text="检查更新" />
+
+        <Button
             android:id="@+id/clear_data"
             android:layout_marginTop="8dp"
             android:backgroundTint="@color/colorAccent"

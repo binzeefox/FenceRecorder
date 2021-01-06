@@ -2,9 +2,7 @@ package com.cloud_hermits.fencerecorder.cat;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,18 +17,17 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.binzeefox.foxframe.core.FoxCore;
-import com.binzeefox.foxframe.core.tools.DataHolder;
 import com.binzeefox.foxframe.tools.dev.ThreadUtil;
 import com.binzeefox.foxframe.tools.phone.NoticeUtil;
 import com.cloud_hermits.fencerecorder.R;
 import com.cloud_hermits.fencerecorder.base.BaseActivity;
 import com.cloud_hermits.fencerecorder.base.BaseApplication;
+import com.cloud_hermits.fencerecorder.cat.record.MainActivity;
 import com.cloud_hermits.fencerecorder.database.tables.Match;
 import com.tencent.bugly.beta.Beta;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;

@@ -142,17 +142,35 @@ public class MatchRecorder implements Controller {
         running = false;
 
         // 记录比赛到本地
+//        Match match = new Match();
+//        match.setBlueName(blueSide);
+//        match.setRedName(redSide);
+//        match.setPeriod(maxTime - curTime);
+//        match.setRedScore(score[0]);
+//        match.setBlueScore(score[1]);
+//        ThreadUtil.get().execute(() -> {
+//            BaseApplication.getDatabase().selectMatch().insertAll(match);
+//            List<Match> list = FoxCore.get().getGlobalData(GLOBAL_KEY_MATCHES, new ArrayList<>());
+//            list.add(match);
+//            FoxCore.get().putGlobalData(GLOBAL_KEY_MATCHES, list);
+//        });
+    }
+
+    /**
+     * 同步方法，将Record保存到本地
+     *
+     * @author tong.xw 2021/01/06 12:48
+     */
+    public void localizeRecord() {
         Match match = new Match();
         match.setBlueName(blueSide);
         match.setRedName(redSide);
         match.setPeriod(maxTime - curTime);
         match.setRedScore(score[0]);
         match.setBlueScore(score[1]);
-        ThreadUtil.get().execute(() -> {
-            BaseApplication.getDatabase().selectMatch().insertAll(match);
-            List<Match> list = FoxCore.get().getGlobalData(GLOBAL_KEY_MATCHES, new ArrayList<>());
-            list.add(match);
-            FoxCore.get().putGlobalData(GLOBAL_KEY_MATCHES, list);
-        });
+        BaseApplication.getDatabase().selectMatch().insertAll(match);
+        List<Match> list = FoxCore.get().getGlobalData(GLOBAL_KEY_MATCHES, new ArrayList<>());
+        list.add(match);
+        FoxCore.get().putGlobalData(GLOBAL_KEY_MATCHES, list);
     }
 }
