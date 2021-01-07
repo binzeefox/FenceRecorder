@@ -7,8 +7,8 @@ android {
         applicationId "com.cloud_hermits.fencerecorder"
         minSdkVersion 28
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
@@ -50,7 +50,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
 
     //个人框架
-    implementation 'com.github.binzeefox:AndroidTemplete:0.3.1'
+    implementation 'com.github.binzeefox:AndroidTemplete:v0.3.2'
 
     //传感器工具类
     implementation 'com.github.binzeefox:WIT901BLE_Helper:1.0'

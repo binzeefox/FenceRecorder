@@ -2,6 +2,7 @@ package com.cloud_hermits.fencerecorder.cat;
 
 import android.os.Bundle;
 
+import com.binzeefox.foxframe.core.FoxCore;
 import com.cloud_hermits.fencerecorder.R;
 import com.cloud_hermits.fencerecorder.base.BaseActivity;
 
@@ -37,8 +38,9 @@ public class AboutActivity extends BaseActivity {
 
     private CharSequence getAboutText() {
 
-        return getString(R.string.app_name_offline) +
-                " 是由 杭州云栖剑社 成员狐彻开源的兵击活动计分工具。" +
+        return getString(R.string.app_name_offline) + " 版本：v" + FoxCore.get().getVersionName() +
+                "\n\n" +
+                "是由 杭州云栖剑社 成员狐彻开源的兵击活动计分工具。" +
                 "该软件包含计分、计时、暂停、到时提醒和保存比赛记录的功能。" +
                 "界面设计方便单手操控，适合作为小型比赛和对抗的计分记录工具。" +
                 "\n\n" +
