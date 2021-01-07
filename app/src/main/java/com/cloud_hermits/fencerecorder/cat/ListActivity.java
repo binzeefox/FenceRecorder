@@ -49,7 +49,7 @@ public class ListActivity extends BaseActivity {
     ListView mListView;
 
     private List<Match> mData = new ArrayList<>();  //保存的数据
-    private ListAdapter mAdapter = new ListAdapter();   //列表适配器
+    private final ListAdapter mAdapter = new ListAdapter();   //列表适配器
 
     @Override
     protected int onSetLayoutResource() {

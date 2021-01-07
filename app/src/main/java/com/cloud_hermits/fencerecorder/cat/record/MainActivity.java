@@ -1,13 +1,19 @@
 package com.cloud_hermits.fencerecorder.cat.record;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+
+import com.binzeefox.foxframe.tools.dev.TextTools;
 import com.binzeefox.foxframe.tools.dev.ThreadUtil;
 import com.binzeefox.foxframe.tools.phone.NoticeUtil;
 import com.cloud_hermits.fencerecorder.R;
@@ -38,7 +44,7 @@ import io.reactivex.disposables.Disposable;
 public class MainActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
     private MatchRecorder recorder; //记录器
-    private final long period = ConfigUtil.getMatchPeriod();
+    private long period = ConfigUtil.getMatchPeriod();
 
     private final RecordState IDLE_STATE = new IdleState();
     private final RecordState RECORDING_STATE = new RecordingState();
@@ -67,13 +73,102 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void create(Bundle savedInstanceState) {
         super.create(savedInstanceState);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("");
 
         timerField.setText(getTimeByLong(period));
+        timerField.setOnClickListener(v -> {
+            if (recorder != null) return;
+            View layout = getLayoutInflater().inflate(R.layout.dialog_main_period_setter, null, false);
+            EditText minField = layout.findViewById(R.id.period_minute);
+            EditText secField = layout.findViewById(R.id.period_second);
+            minField.setText(new SimpleDateFormat("m", Locale.CHINA).format(period));
+            secField.setText(new SimpleDateFormat("ss", Locale.CHINA).format(period));
+            new AlertDialog.Builder(this)
+                    .setTitle("请输入本局比赛时长")
+                    .setCancelable(true)
+                    .setView(layout)
+                    .setPositiveButton("确定", (dialog, which) -> {
+                        String min, sec;
+                        min = minField.getText().toString();
+                        sec = secField.getText().toString();
+                        if (min.isEmpty()){
+                            minField.setError("该项不能为空");
+                            return;
+                        }
+                        if (sec.isEmpty()){
+                            secField.setError("该项不能为空");
+                            return;
+                        }
+                        if (!TextTools.isInteger(min)) {
+                            minField.setError("请输入自然数");
+                            return;
+                        }
+                        if (!TextTools.isInteger(sec)){
+                            secField.setError("请输入自然数");
+                            return;
+                        }
+                        int minute = Integer.parseInt(min);
+                        int second = Integer.parseInt(sec);
+                        period = minute * 60 * 1000 + second * 1000;
+                        timerField.setText(getTimeByLong(period));
+                    }).show();
+        });
     }
 
     @Override
     public void onBackPressed() {
         curState.onBackPressed();
+    }
+
+    /**
+     * 菜单点击事件
+     *
+     * @author binze 2019/11/21 12:04
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.about) { //说明
+            if (recorder == null || !recorder.isRunning()) {
+                //显示说明弹窗
+                new AlertDialog.Builder(this)
+                        .setTitle("使用说明")
+                        .setCancelable(true)
+                        .setMessage(getIntro())
+                        .show();
+                return true;
+            } else if (recorder.isRunning()){
+                NoticeUtil.get().showToast("计时状态下屏蔽按键");
+                return false;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.action_settings).setVisible(false);
+        return true;
+    }
+
+    /**
+     * 获取使用说明
+     *
+     * @author binze 2020/6/19 11:27
+     */
+    private String getIntro() {
+        return "1. 输入双方选手姓名\n" +
+                "2. （若需要）点击比赛时长修改比赛时长\n" +
+                "3. 点击开始按钮进行计时\n" +
+                "4. 若出现得分，暂停计时并修改分数\n" +
+                "5. 时间到，裁判修改最终分数并按返回键退出\n" +
+                "6. 若提前结束，需先暂停计时，并按两次返回键结束比赛，按第三次返回键退出\n\n" +
+                "P.S. \n为防止误触，计时状态下将屏蔽除暂停外所有操作。如需修改分数，请先暂停计时。\n比赛开始后将不能修改双方选手名称和比赛时长。\n比赛结束后可在列表中添加备注。";
     }
 
     /**
@@ -232,6 +327,7 @@ public class MainActivity extends BaseActivity {
                         changeState(END_STATE);
                     }
                 });
+                timerField.setEnabled(false);
             }
             fabIcon.setImageResource(R.drawable.ic_pause);
         }
